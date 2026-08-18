@@ -30,6 +30,7 @@ RUN ssh-keygen -f /etc/ssh/ssh_host_ed25519_key -N '' -t ed25519
 COPY sshd_config /etc/ssh/
 COPY run.sh /usr/local/bin
 COPY --from=cloudflared-build /out/cloudflared /usr/local/bin/cloudflared
+RUN chmod +x /usr/local/bin/run.sh /usr/local/bin/cloudflared
 
 EXPOSE 22
 CMD ["/usr/local/bin/run.sh"]
@@ -122,6 +123,7 @@ RUN curl -sL https://curl.se/ca/cacert.pem -o /rootfs/etc/ssl/certs/ca-certifica
 
 COPY run.sh /rootfs/usr/local/bin/
 COPY --from=cloudflared-build /out/cloudflared /rootfs/usr/local/bin/cloudflared
+RUN chmod +x /rootfs/usr/local/bin/run.sh /rootfs/usr/local/bin/cloudflared
 
 FROM scratch AS final-v7
 COPY --from=musl-rootfs /rootfs/ /
